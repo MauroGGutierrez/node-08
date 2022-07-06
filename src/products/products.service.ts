@@ -1,4 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Product } from './interfaces/product.interface';
 
 @Injectable()
@@ -23,7 +28,13 @@ export class ProductsService {
   }
 
   getId(id: number): Product {
-    return this.products.find((item: Product) => item.id == id);
+    const product = this.products.find((item: Product) => item.id == id);
+    //------------------------------- buscame un producto donde el id sea el mismo al mandado
+    if (product) {
+      return product;
+    } else {
+      throw new NotFoundException(`No encontramos el producto ${id}`); //throw es como un return pero para los errores
+    }
   }
 
   insert(body: any) {
@@ -50,7 +61,15 @@ export class ProductsService {
   }
 
   delete(id: number) {
-    this.products = this.products.filter((item: Product) => item.id != id);
+    const product = this.products.find((item: Product) => item.id == id);
+    if (product) {
+      this.products = this.products.filter((item: Product) => item.id != id);
+    } else {
+      throw new HttpException(
+        `No existe el producto ${id}`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
   }
 
   private lastId(): number {
