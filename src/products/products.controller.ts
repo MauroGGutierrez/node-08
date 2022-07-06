@@ -6,9 +6,11 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  ParseIntPipe,
   Post,
   Put,
 } from '@nestjs/common';
+import { ProductDTO } from './dto/product.dto';
 import { Product } from './interfaces/product.interface';
 import { ProductsService } from './products.service';
 
@@ -22,18 +24,25 @@ export class ProductsController {
   }
 
   @Get(':id')
-  find(@Param('id') id: number) {
+  async find(@Param('id', ParseIntPipe) id: number) {
     return this.productsService.getId(id);
   }
 
   @Post()
   @HttpCode(HttpStatus.NO_CONTENT)
-  createProduct(@Body() body) {
-    this.productsService.insert(body);
+  createProduct(@Body() productDto: ProductDTO) {
+    this.productsService.insert(productDto);
   }
 
   @Put(':id')
-  update(@Param('id') id: number, @Body() body) {
+  async update(
+    @Param(
+      'id',
+      new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
+    )
+    id: number,
+    @Body() body,
+  ) {
     return this.productsService.update(id, body);
   }
 
