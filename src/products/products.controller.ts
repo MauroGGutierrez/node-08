@@ -7,9 +7,11 @@ import {
   HttpStatus,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
   Put,
 } from '@nestjs/common';
+import { ProductPatchDto } from './dto/product-patch.dto';
 import { ProductDTO } from './dto/product.dto';
 import { Product } from './interfaces/product.interface';
 import { ProductsService } from './products.service';
@@ -43,6 +45,14 @@ export class ProductsController {
     @Body() body,
   ) {
     return this.productsService.update(id, body);
+  }
+
+  @Patch(':id')
+  async patch(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() body: ProductPatchDto,
+  ) {
+    return this.productsService.patch(id, body);
   }
 
   @Delete(':id')
