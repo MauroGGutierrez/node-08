@@ -21,6 +21,9 @@ import { TagsModule } from './tags/tags.module';
       username: 'root',
       password: 'root',
       database: 'nestdb',
+      retryDelay: 3000,
+      autoLoadEntities: true,
+      synchronize: true,
     }),
   ],
   controllers: [

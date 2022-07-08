@@ -2,7 +2,8 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Product {
-  @PrimaryGeneratedColumn()
+  //estamos creando nuestras entidades
+  @PrimaryGeneratedColumn() //los id se hacen de esta forma para que se autogeneren las id
   id: number;
 
   @Column()
