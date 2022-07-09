@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Review } from './review.entity';
 
 @Entity()
 export class Product {
@@ -14,4 +15,8 @@ export class Product {
 
   @Column()
   stock: number;
+
+  @OneToMany(() => Review, (review) => review.product)
+  reviews: Review[]; // un producto puede tener varias reviews y creame un array de review
+  //si dice de uno a muchos sabemos q va a ser un array y que el nombre lleva s al final
 }

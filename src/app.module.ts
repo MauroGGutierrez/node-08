@@ -9,6 +9,7 @@ import { UsersController } from './controllers/users/users.controller';
 import { ProductsService } from './products/products.service';
 import { ProductsModule } from './products/products.module';
 import { TagsModule } from './tags/tags.module';
+import { ReviewsModule } from './reviews/reviews.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { TagsModule } from './tags/tags.module';
       autoLoadEntities: true,
       synchronize: true,
     }),
+    ReviewsModule,
   ],
   controllers: [
     AppController,

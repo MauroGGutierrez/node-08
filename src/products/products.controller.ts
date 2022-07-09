@@ -21,7 +21,7 @@ export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Get()
-  getAllProducts(): Product[] {
+  getAllProducts(): Promise<Product[]> {
     return this.productsService.getAll();
   }
 
@@ -52,7 +52,7 @@ export class ProductsController {
     @Param('id', ParseIntPipe) id: number,
     @Body() body: ProductPatchDto,
   ) {
-    return this.productsService.patch(id, body);
+    return this.productsService.update(id, body);
   }
 
   @Delete(':id')
