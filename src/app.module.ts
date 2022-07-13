@@ -10,6 +10,7 @@ import { ProductsService } from './products/products.service';
 import { ProductsModule } from './products/products.module';
 import { TagsModule } from './tags/tags.module';
 import { ReviewsModule } from './reviews/reviews.module';
+import { SizeModule } from './size/size.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { ReviewsModule } from './reviews/reviews.module';
       synchronize: true,
     }),
     ReviewsModule,
+    SizeModule,
   ],
   controllers: [
     AppController,
