@@ -28,7 +28,7 @@ export class Product {
   reviews: Review[]; // un producto puede tener varias reviews y creame un array de review
   //si dice de uno a muchos sabemos q va a ser un array y que el nombre lleva s al final
 
-  @JoinTable()
+  @JoinTable() // siempre va en el de mayor peso en este caso product y no size
   @ManyToMany(() => Size, (size) => size.products)
   sizes: Size[];
 }

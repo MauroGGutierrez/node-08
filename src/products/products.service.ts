@@ -44,7 +44,8 @@ export class ProductsService {
     const sizes =
       body.sizes &&
       (await Promise.all(
-        body.sizes.map((size) => this.selectOrCreateSize(size)), // el selectOrCreateSize recorre un array (solo funciona de forma async)
+        //(importante el promise all)
+        body.sizes.map((size) => this.selectOrCreateSize(size)), // el selectOrCreateSize me dice buscame si existe , sino crealo
       ));
     const product = await this.productsRepository.preload({
       id,
