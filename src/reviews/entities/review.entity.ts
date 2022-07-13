@@ -3,7 +3,7 @@ import { Product } from '../../products/entities/product.entity';
 
 @Entity('reviews')
 export class Review {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn() //los id se hacen de esta forma para que se autogeneren las id
   id: number;
 
   @Column()

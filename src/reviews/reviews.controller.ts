@@ -1,4 +1,5 @@
 import { Body, Controller, Param, ParseIntPipe, Post } from '@nestjs/common';
+import { ReviewDto } from './dto/review.dto';
 import { ReviewsService } from './reviews.service';
 
 @Controller('reviews')
