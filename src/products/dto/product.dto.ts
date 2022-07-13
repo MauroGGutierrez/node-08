@@ -1,4 +1,4 @@
-import { IsInt, IsString } from 'class-validator';
+import { IsInt, IsString, IsArray } from 'class-validator';
 
 export class ProductDTO {
   @IsString()
@@ -9,4 +9,7 @@ export class ProductDTO {
 
   @IsInt()
   stock: number;
+  @IsString({ each: true })
+  @IsArray()
+  sizes: string[];
 }

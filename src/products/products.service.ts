@@ -1,6 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Size } from 'src/size/entities/size.entities';
 import { Repository } from 'typeorm';
+import { ProductPatchDto } from './dto/product-patch.dto';
 import { ProductDTO } from './dto/product.dto';
 
 import { Product } from './entities/product.entity';
@@ -10,6 +12,8 @@ export class ProductsService {
   constructor(
     @InjectRepository(Product)
     private productsRepository: Repository<Product>,
+    @InjectRepository(Size)
+    private sizesRepository: Repository<Size>,
   ) {}
 
   async getAll(): Promise<Product[]> {
@@ -20,22 +24,34 @@ export class ProductsService {
     return await this.productsRepository.findOne({ where: { id } });
   }
 
-  async insert(body: ProductDTO): Promise<Product> {
-    const product = this.productsRepository.create(body);
+  async insert(body: ProductDTO) {
+    const sizes = await Promise.all(
+      body.sizes.map((size) => this.selectOrCreateSize(size)),
+    );
+    const product = this.productsRepository.create({
+      ...body,
+      sizes,
+    });
     await this.productsRepository.save(product);
     return product;
   }
 
-  async update(id: number, body: any): Promise<Product> {
-    const userProduct = {
+  async update(id: number, body: ProductDTO | ProductPatchDto) {
+    const productCount = await this.productsRepository.count({ where: { id } });
+    if (productCount === 0) {
+      throw new NotFoundException(`No se encuentra el producto ${id}`);
+    }
+    const sizes =
+      body.sizes &&
+      (await Promise.all(
+        body.sizes.map((size) => this.selectOrCreateSize(size)), // el selectOrCreateSize recorre un array (solo funciona de forma async)
+      ));
+    const product = await this.productsRepository.preload({
       id,
       ...body,
-    };
-    const product = await this.productsRepository.preload(userProduct);
-    if (product) {
-      return await this.productsRepository.save(product);
-    }
-    throw new NotFoundException(`No se encuentra el producto ${id}`);
+      sizes,
+    });
+    return this.productsRepository.save(product);
   }
 
   async delete(id: number): Promise<Product> {
@@ -44,5 +60,13 @@ export class ProductsService {
       return this.productsRepository.remove(product);
     }
     throw new NotFoundException(`No se encuentra el producto ${id}`);
+  }
+  private async selectOrCreateSize(size: string) {
+    const sizeEntity = await this.sizesRepository.findOne({ where: { size } });
+    if (sizeEntity) {
+      return sizeEntity;
+    }
+    const newSize = this.sizesRepository.create({ size });
+    return this.sizesRepository.save(newSize);
   }
 }
